@@ -1,0 +1,3 @@
+Ticker,Strike,Bid,Ask,isPut,isFuture,BidSize,AskSize
+SPX Index,0,2.475750e+03,2.476680e+03,0,0,0,0
+ESU7 Index,0,2.473750e+03,2474,0,1,341,286
