@@ -108,7 +108,9 @@ classdef Dynamic < matlab.mixin.Copyable
 %              model.nu=4.83548;
        %     model.mu=0.5*model.sigma^2;  \
       % model.sigma=model.sigma
-            model
+            model.mu=0;
+            model.sigma=1.05*model.sigma;
+            
 
 %             arbitrage = ArbitrageFinder.findArbitrageForDate( date, false, true );
 %             assert(~arbitrage);    
@@ -125,7 +127,7 @@ classdef Dynamic < matlab.mixin.Copyable
             ump.setCurrentPosition(currentPort);
             
             ww=currentPort.computeMarkToMarket(model.S0);
-            riskAversion = 100/ww;
+            riskAversion = 2/ww;
             utilityFunction = ExponentialUtilityFunction( riskAversion );
             ump.setUtilityFunction(utilityFunction);
             for i=1:length(dayData.instruments)
@@ -136,7 +138,8 @@ classdef Dynamic < matlab.mixin.Copyable
                     ump.addConstraint(QuantityConstraint(idx,-instrument.bidSize,instrument.askSize));
              end 
              
-            %ump.addConstraint( BoundedLiabilityConstraint());
+             
+            ump.addConstraint( NoShortSellingConstraint());
             
 %             prices = model.simulatePricePaths(1000000,1);
 %             scenarios = prices(:,end);
@@ -144,13 +147,13 @@ classdef Dynamic < matlab.mixin.Copyable
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % rescale the spread
-            percentSpread=0.01;
-            for k=1:length(ump.instruments)
-                if ump.instruments{k}.contractSize >1
-                    ump.instruments{k}.bid=ump.instruments{k}.bid*(1-percentSpread);
-                    ump.instruments{k}.ask=ump.instruments{k}.ask*(1+percentSpread);
-                end
-            end     
+%             percentSpread=0.01;
+%             for k=1:length(ump.instruments)
+%                 if ump.instruments{k}.contractSize >1
+%                     ump.instruments{k}.bid=ump.instruments{k}.bid*(1-percentSpread);
+%                     ump.instruments{k}.ask=ump.instruments{k}.ask*(1+percentSpread);
+%                 end
+%             end     
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%               
             [utility, quantities,qp] = ump.optimize();
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

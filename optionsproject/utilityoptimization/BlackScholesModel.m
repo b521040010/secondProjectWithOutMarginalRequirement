@@ -48,7 +48,7 @@ classdef BlackScholesModel < Model1D
         
         function res = logPdf(bsm,x)
         % Compute the log pdf of the model
-            [m,s] = logNormalParameters(bsm)      
+            [m,s] = logNormalParameters(bsm);    
             res = -((-m + log(x)).^2/(2*s^2)) - log((sqrt(2*pi)*s*x));            
         end          
         

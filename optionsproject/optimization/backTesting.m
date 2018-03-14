@@ -34,7 +34,7 @@ nov=nov.run;
 
 mark=[febMark marMark aprMark mayMark juneMark julyMark augMark sepMark octMark novMark nov.histPort.D20171116T150000.payoff(2582.94)];
 spot=[febSpot marSpot aprSpot maySpot juneSpot julySpot augSpot sepSpot octSpot novSpot 2582.94];
-partitions=[length(febMark) length(marMark) length(aprMark) length(mayMark) length(juneMark) length(julyMark) length(augMark) length(sepMark) length(octMark) ]
+partitions=[length(febMark) length(marMark) length(aprMark) length(mayMark) length(juneMark) length(julyMark) length(augMark) length(sepMark) length(octMark) length(novMark)]
 partitions=cumsum(partitions)
 
 ax1=subplot(2,1,1);
@@ -60,7 +60,7 @@ figure
 plot(log(mark/mark(1)))
 hold on
 plot(log(spot/spot(1)))
-logMarkLength=min(log(mark/mark(1)))-0.25*min(log(mark/mark(1))):0.1:max(log(mark/mark(1)))+0.25*max(log(mark/mark(1)));
+logMarkLength=min(log(mark/mark(1)))-0.25*min(log(mark/mark(1))):0.01:max(log(mark/mark(1)))+0.25*max(log(mark/mark(1)));
 for i=1:length(partitions)
 plot([partitions(i)*ones(1,length(logMarkLength))],logMarkLength)
 end
@@ -76,5 +76,15 @@ save aug aug
 save sep sep
 save oct oct
 save nov nov
+
+
+nov.plotHistPortfolio('D20171116T150000')
+sep.plotHistPortfolio('D20170914T150000')
+plot(2000:3000,sep.histPort.D20170914T150000.payoff(2000:3000),'displayName','payoff on D20170914T150000')
+hold on
+%plot(2000:3000,100000*ones(1,length(2000:3000)))
+plot(2000:3000,sep.histPort.D20170913T150000.computeMarkToMarket(0)*ones(1,length(2000:3000)),'displayName','mark-to-market on D20170913T150000')
+plot(2500*ones(1,length(0:10000:14*10^5)),0:10000:14*10^5,'displayName','spot on D20170914T150000')
+plot(2495.67*ones(1,length(0:10000:14*10^5)),0:10000:14*10^5,'displayName','openning price on D20170915T150000')
 
 end
